@@ -57,6 +57,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         } else {
             echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
         }
+
     }
 }
 ?>

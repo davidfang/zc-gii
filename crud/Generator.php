@@ -237,6 +237,11 @@ class Generator extends \yii\gii\Generator
             return "\$form->field(\$model, '$attribute')->checkbox()";
         } elseif ($column->type === 'text') {
             return "\$form->field(\$model, '$attribute')->textarea(['rows' => 6])";
+        } elseif ($column->type === 'date') {
+            return "\$form->field(\$model, '$attribute')->widget(\\kartik\\widgets\\DatePicker::className(),['pluginOptions' => [
+        'format' => 'yyyy-mm-dd',
+        'todayHighlight' => true
+    ]])";
         } else {
             if (preg_match('/^(password|pass|passwd|passcode)$/i', $column->name)) {
                 $input = 'passwordInput';
@@ -245,14 +250,25 @@ class Generator extends \yii\gii\Generator
             }else{
                 $input = 'textInput';
             }
-            if (is_array($column->enumValues) && count($column->enumValues) > 0) {
+            if (is_array($column->enumValues) && count($column->enumValues) > 0 ) {
                 $dropDownOptions = [];
                 foreach ($column->enumValues as $enumValue) {
                     $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
                 }
-                return "\$form->field(\$model, '$attribute')->dropDownList("
+                if(preg_match('/_r$/i', $column->name)){
+                    return "\$form->field(\$model, '$attribute')->radioList("
                     . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
-            } elseif ($column->phpType !== 'string' || $column->size === null) {
+                }elseif(preg_match('/_c$/i', $column->name)){
+                    return "\$form->field(\$model, '$attribute')->checkboxList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                }elseif(preg_match('/_d$/i', $column->name)){
+                    return "\$form->field(\$model, '$attribute')->dropDownList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                }else {
+                    return "\$form->field(\$model, '$attribute')->dropDownList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => ''])";
+                }
+            }elseif($column->phpType !== 'string' || $column->size === null) {
                 return "\$form->field(\$model, '$attribute')->$input()";
             } else {
                 return "\$form->field(\$model, '$attribute')->$input(['maxlength' => $column->size])";
@@ -274,8 +290,34 @@ class Generator extends \yii\gii\Generator
         $column = $tableSchema->columns[$attribute];
         if ($column->phpType === 'boolean') {
             return "\$form->field(\$model, '$attribute')->checkbox()";
-        } else {
-            return "\$form->field(\$model, '$attribute')";
+        } elseif ($column->type === 'date') {
+            return "\$form->field(\$model, '$attribute')->widget(\\kartik\\widgets\\DatePicker::className(),['pluginOptions' => [
+        'format' => 'yyyy-mm-dd',
+        'todayHighlight' => true
+    ]])";
+        }else {
+            if (is_array($column->enumValues) && count($column->enumValues) > 0) {
+                $dropDownOptions = [];
+                foreach ($column->enumValues as $enumValue) {
+                    $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
+                }
+
+                if(preg_match('/_r$/i', $column->name)){
+                    return "\$form->field(\$model, '$attribute')->radioList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                }elseif(preg_match('/_c$/i', $column->name)){
+                    return "\$form->field(\$model, '$attribute')->checkboxList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                }elseif(preg_match('/_d$/i', $column->name)){
+                    return "\$form->field(\$model, '$attribute')->dropDownList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                }else {
+                    return "\$form->field(\$model, '$attribute')->dropDownList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => ''])";
+                }
+            }else {
+                return "\$form->field(\$model, '$attribute')";
+            }
         }
     }
 
