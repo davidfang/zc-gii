@@ -1,0 +1,29 @@
+{
+    "name": "zc/gii",
+    "description": "zc gii",
+    "keywords": [
+      "gii",
+        "yii2",
+        "framework"
+    ],
+    "authors": [
+        {
+            "name": "david fang"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/davidfang/zc-gii"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {"zc\\gii\\": ""}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}
