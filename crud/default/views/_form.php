@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
        'id' => 'w0',
        'options' => ['class' => 'form-horizontal'],
         'fieldConfig' => [
-            'template' => "<div class=\"control-group\">{label}\n<div class=\"controls\">{input}</div>\n<div class=\"col-lg-8\">{error}</div></div>",
+            'template' => "<div class=\"control-group\">{label}\n<div class=\"col-lg-2 controls\">{input}</div>\n<div class=\"col-lg-8\">{error}</div></div>",
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
         ],
     ]); ?>

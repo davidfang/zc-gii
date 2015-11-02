@@ -22,6 +22,11 @@ use yii\widgets\ActiveForm;
     <?= "<?php " ?>$form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+    'options' => ['class' => 'form-horizontal'],
+    'fieldConfig' => [
+    'template' => "<div class=\"control-group\">{label}\n<div class=\"col-lg-2 controls\">{input}</div>\n</div>",
+'labelOptions' => ['class' => 'col-lg-1 control-label'],
+],
     ]); ?>
 
 <?php
