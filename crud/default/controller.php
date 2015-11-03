@@ -149,7 +149,40 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
         return $this->redirect(['index']);
     }
-
+    /**
+    * <?= $modelClass ?>模型状态修改Ajax操作
+    * 备注：将所有主键为$keys的$f字段改为$v状态
+    * @param $f 操作字段名
+    * @param $v 操作字段值
+    * @param array $keys 将修改状态的主键
+    * @return array
+    * {status: true, msg: "更新成功2条数据。"}
+    */
+    public function actionChangeStatusAjax($f,$v,array $keys){
+        $return = ['status'=>false,'msg'=>''];
+        $model = new <?= $modelClass ?>();
+        <?php
+        if (count($pks) === 1) {
+            $condition = '$keys';
+        } else {//这里多主键可能会出错，待测试
+            $condition = [];
+            foreach ($pks as $pk) {
+                $condition[] = "'$pk' => \$$pk";
+            }
+            $condition = '[' . implode(', ', $condition) . ']';
+        }
+        ?>
+        $data = $model->updateAll([$f=>$v],['id' => $keys]);
+        //$data = $model->updateAll([$f=>$v],['id' => $keys]);
+        if($data >0) {
+            $return['status'] = true;
+            $return['msg'] = '更新成功'.$data.'条数据。';
+        }else{
+            $return['msg'] = '更新失败';
+        }
+        Yii::$app->response->format = 'json';
+        return $return;
+    }
     /**
      * 根据primary key查找 <?= $modelClass ?> 模型的信息
      * 如果数据不存在跳转到 404

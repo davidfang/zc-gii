@@ -17,15 +17,15 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-search">
+<div class="panel panel-default <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-search">
 
     <?= "<?php " ?>$form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
-    'options' => ['class' => 'form-horizontal'],
+    'options' => ['class' => 'form-inline'],
     'fieldConfig' => [
-    'template' => "<div class=\"control-group\">{label}\n<div class=\"col-lg-2 controls\">{input}</div>\n</div>",
-'labelOptions' => ['class' => 'col-lg-1 control-label'],
+    'template' => " {label}\n {input}",
+'labelOptions' => ['class' => 'col-lg-3 control-label'],
 ],
     ]); ?>
 
