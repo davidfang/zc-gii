@@ -5,7 +5,8 @@ use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
 /* @var $generator zc\gii\crud\Generator */
-
+$columnNames = $generator->columnNames;
+$generator->modelClass;
 echo "<?php\n";
 ?>
 
@@ -16,13 +17,21 @@ use yii\widgets\ActiveForm;
 /* @var $model <?= ltrim($generator->searchModelClass, '\\') ?> */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<div class="panel panel-default ads-position-toolbar">
-
-
-    <?='<?'?>=Html::button('启动',['onclick'=>"javascript:changeStatus('status','1')"]) ?>
-    <?='<?'?>=Html::button('暂停',['onclick'=>"javascript:changeStatus('status','-1')"]) ?>
-    <?='<?'?>=Html::button('停止',['onclick'=>"javascript:changeStatus('status','-2')"]) ?>
-    <?='<?'?>=Html::button('删除',['onclick'=>"javascript:changeStatus('status','0')"]) ?>
+<div class="panel panel-default <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-toolbar">
+    <?php
+    $model = new $generator->modelClass();
+        $toolbars = $model->toolbars;
+        if (!empty($toolbars)) {
+            $customjs = false;
+            foreach ($toolbars as $toolbar) {
+                if ($toolbar['jsfunction']!='changeStatus'){
+                    $customjs = true;
+                }
+                echo '<?=Html::button(\'' . $toolbar['name'] . "',['class'=>'btn btn-primary btn-sm', 'onclick'=>\"javascript:{$toolbar['jsfunction']}('{$toolbar['field']}','{$toolbar['field_value']}')\"]) ?>\n";
+            }
+            if($customjs) echo '<?=$this->registerJsFile("/js/' . $generator->controllerID . '.js");?>' . "\n";
+        }
+    ?>
 
 
 </div>

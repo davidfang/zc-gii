@@ -1,4 +1,6 @@
 <?php
+use yii\helpers\Inflector;
+use yii\helpers\VarDumper;
 /**
  * This is the template for generating the model class of a specified table.
  */
@@ -81,4 +83,64 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         <?= $relation[0] . "\n" ?>
     }
 <?php endforeach; ?>
+    /**
+    * 多选项配置
+    * @return array
+    */
+    public function getOptions(){
+    <?php
+    $options = [];
+    foreach ($tableSchema->columns as $column) {
+        if (is_array($column->enumValues) && count($column->enumValues) > 0) {
+           foreach ($column->enumValues as $enumValue) {
+                $options[$column->name][$enumValue] = Inflector::humanize($enumValue);
+            }
+       }
+   }
+    echo 'return '.VarDumper::export($options) .';';
+    ?>
+    }
+    /**
+    * toolbars工具栏按钮设定
+    * 字段为枚举类型时存在
+    * 默认为复选项的值，
+    * jsfunction默认值为changeStatus
+    * @return array
+    * 返回值举例：
+    * [
+        ['name'=>'忘却',//名称
+        'jsfunction'=>'ask',//js操作方法，默认为：changeStatus
+        'field'=>'status_2',//操作字段名
+        'field_value'=>'3'],//修改后的值
+        ]
+    */
+    public function getToolbars(){
+        $attributeLabels = $this->attributeLabels();
+        return [
+    <?php
+    foreach ($tableSchema->columns as $column) {
+        if (is_array($column->enumValues) && count($column->enumValues) > 0) {
+            $dropDownOptions = [];
+            foreach ($column->enumValues as $enumValue) {
+                $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
+                echo "
+                ['name'=>'改'.".'$attributeLabels["'.$column->name."\"].'为'.".'$this->options["'.$column->name."\"][{$enumValue}]".",
+            'jsfunction'=>'changeStatus',
+            'field'=>'{$column->name}',
+            'field_value'=>".'$this->options["'.$column->name."\"][{$enumValue}]],\n
+                ";
+
+                 /*echo "
+                ['name'=>'改{$column->name}为{$enumValue}',
+            'jsfunction'=>'changeStatus',
+            'field'=>'{$column->name}',
+            'field_value'=>'{$enumValue}'],\n
+                ";*/
+            }
+        }
+    }
+    ?>
+        ];
+    }
+
 }
