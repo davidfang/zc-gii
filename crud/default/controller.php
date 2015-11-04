@@ -172,8 +172,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             $condition = '[' . implode(', ', $condition) . ']';
         }
         ?>
-        $data = $model->updateAll([$f=>$v],['id' => $keys]);
-        //$data = $model->updateAll([$f=>$v],['id' => $keys]);
+$data = $model->updateAll([$f=>$v],['id' => $keys]);
         if($data >0) {
             $return['status'] = true;
             $return['msg'] = '更新成功'.$data.'条数据。';

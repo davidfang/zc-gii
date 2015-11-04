@@ -97,7 +97,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
             }
        }
    }
-    echo 'return '.VarDumper::export($options) .';';
+    echo '      return '.VarDumper::export($options) .";\n";
     ?>
     }
     /**
@@ -116,26 +116,18 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     */
     public function getToolbars(){
         $attributeLabels = $this->attributeLabels();
+        $options = $this->options;
         return [
     <?php
     foreach ($tableSchema->columns as $column) {
         if (is_array($column->enumValues) && count($column->enumValues) > 0) {
-            $dropDownOptions = [];
             foreach ($column->enumValues as $enumValue) {
-                $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
-                echo "
-                ['name'=>'改'.".'$attributeLabels["'.$column->name."\"].'为'.".'$this->options["'.$column->name."\"][{$enumValue}]".",
-            'jsfunction'=>'changeStatus',
-            'field'=>'{$column->name}',
-            'field_value'=>".'$this->options["'.$column->name."\"][{$enumValue}]],\n
-                ";
-
-                 /*echo "
-                ['name'=>'改{$column->name}为{$enumValue}',
-            'jsfunction'=>'changeStatus',
-            'field'=>'{$column->name}',
-            'field_value'=>'{$enumValue}'],\n
-                ";*/
+                echo "[
+                'name'=>".'$options["'.$column->name.'"]["'.$enumValue.'"]'.",
+                'jsfunction'=>'changeStatus',
+                'field'=>'{$column->name}',
+                'field_value'=>'{$enumValue}'
+                ],";
             }
         }
     }
