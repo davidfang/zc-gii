@@ -5,6 +5,58 @@ zc-gii
 ###安装
 
 ###配置
+####V1.0配置
+打开配置文件，修改gii设置如下：
+`
+$config['bootstrap'][] = 'gii';
+    //$config['modules']['gii'] = 'yii\gii\Module';
+    $config['modules']['gii'] = [
+        'class' => 'yii\gii\Module',
+        'generators'=>[
+            'controller' => [
+                'class' => 'zc\gii\controller\Generator',
+                'templates' => [
+                    'zc-gii' => '@vendor/zc/gii/controller/default',
+                ]
+            ],
+            'crud' => [
+                //'class' => 'yii\gii\generators\crud\Generator',
+                'class' => 'zc\gii\crud\Generator',
+                'templates' => [
+                    'zc-gii' => '@vendor/zc/gii/crud/default',
+                ]
+            ],
+            'module' => [
+                'class' => 'zc\gii\module\Generator',
+                'templates' => [
+                    'zc-gii' => '@vendor/zc/gii/module/default',
+                ]
+            ],
+            'form' => [
+                'class' => 'zc\gii\form\Generator',
+                'templates' => [
+                    'zc-gii' => '@vendor/zc/gii/form/default',
+                ]
+            ],
+            'model' => [
+                'class' => 'zc\gii\model\Generator',
+                'templates' => [
+                    'zc-gii' => '@vendor/zc/gii/model/default',
+                ]
+            ],
+            'extension' => [
+                'class' => 'zc\gii\extension\Generator',
+                'templates' => [
+                    'zc-gii' => '@vendor/zc/gii/extension/default',
+                ]
+            ],
+
+        ]
+
+    ];
+`
+####V2.0配置
+
 ###使用说明
 1. 通过gii生成model，模板选择zc-gii；
 2. 修改生成的model

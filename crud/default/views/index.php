@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php if(!empty($generator->searchModelClass)): ?>
 <?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
-    <?= '<?php echo $this->render("_toolbar“, [”model“ => $dataProvider]); ?>'?>
+    <?= '<?php echo $this->render("_toolbar", ["model" => $dataProvider]); ?>'?>
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
@@ -56,10 +56,62 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     foreach ($tableSchema->columns as $column) {
         $format = $generator->generateColumnFormat($column);
         if (++$count < 6) {
-            echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            $tmp_str = '';
+            //echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
         } else {
-            echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            $tmp_str = '//';
+            //echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
         }
+
+        if(in_array($column->type,['datetime','timestamp', 'time', 'date'])){
+            ?>
+            [
+                'attribute' => '<?=$column->name?>',
+                'format' => 'html',
+                'value' => '<?=$column->name?>',
+                'filter' =>kartik\widgets\DatePicker::widget(
+                    [  'model'=>$searchModel,
+                        'name'=>Html::getInputName($searchModel, '<?=$column->name?>'),
+                        'value'=>$searchModel-><?=$column->name?>,
+                       'pluginOptions'=>['format' => 'yyyy-mm-dd',
+                                            'todayHighlight' => true,]
+                    ]),
+                'options'=>['style' => 'width:200px;'],
+
+            ],
+    <?php
+        }elseif(is_array($column->enumValues) && !empty($column->enumValues) ){
+    ?>
+            [
+            'attribute' => '<?=$column->name?>',
+            'format' => 'html',
+            'value' => function ($model) {
+            $class = 'label-success';
+            $class = 'label-warning';
+            $class = 'label-danger';
+            $class = 'label-info';
+
+            return '<span class="label ' . $class . '">' . ($model->options['<?=$column->name?>'][$model-><?=$column->name?>] ) . '</span>';
+            },
+            'options'=>['style' => 'width:90px;'],
+            'filter' => Html::activeDropDownList(
+            $searchModel,
+            '<?=$column->name?>',
+            $searchModel->options['<?=$column->name?>'],
+            ['class' => 'form-control', 'prompt' => '请选择']
+            )
+            ],
+    <?php
+        }else{
+            echo "            $tmp_str'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        }
+
+
+
+
+
+
+
 
     }
 }
