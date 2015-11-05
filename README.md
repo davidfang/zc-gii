@@ -7,7 +7,7 @@ zc-gii
 ###配置
 ####V1.0配置
 打开配置文件，修改gii设置如下：
-`
+````php
 $config['bootstrap'][] = 'gii';
     //$config['modules']['gii'] = 'yii\gii\Module';
     $config['modules']['gii'] = [
@@ -54,7 +54,7 @@ $config['bootstrap'][] = 'gii';
         ]
 
     ];
-`
+````
 ####V2.0配置
 
 ###使用说明
