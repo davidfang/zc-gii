@@ -302,10 +302,10 @@ class Generator extends \yii\gii\Generator
                 $model = new $this->modelClass();
                 $dropDownOptions =$model->options[$column->name];
                 if(preg_match('/_r$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->radioList("
+                    return "\$form->field(\$model, '$attribute')->inline()->radioList("
                     . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
                 }elseif(preg_match('/_c$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->checkboxList("
+                    return "\$form->field(\$model, '$attribute')->inline()->checkboxList("
                     . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
                 }elseif(preg_match('/_d$/i', $column->name)){
                     return "\$form->field(\$model, '$attribute')->dropDownList("

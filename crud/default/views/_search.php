@@ -10,7 +10,7 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use zc\gii\bs3activeform\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->searchModelClass, '\\') ?> */
@@ -24,8 +24,8 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     'options' => ['class' => 'form-inline'],
     'fieldConfig' => [
-    'template' => " {label}\n {input}",
-'labelOptions' => ['class' => 'col-lg-3 control-label'],
+    'template' => " {label}\n <div class='col-sm-7'>{input}</div>",
+'labelOptions' => ['class' => 'col-lg-4 control-label'],
 ],
     ]); ?>
 
