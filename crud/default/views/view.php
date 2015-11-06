@@ -45,7 +45,20 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 } else {
     foreach ($generator->getTableSchema()->columns as $column) {
         $format = $generator->generateColumnFormat($column);
-        echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        if(is_array($column->enumValues) && !empty($column->enumValues) ) { ?>
+        [
+        'attribute'=>'<?=$column->name?>',
+        'value'=>$model->options['<?=$column->name?>'][$model-><?=$column->name?>]
+        ],
+      <?php  }elseif(preg_match('/^(img|image)/i', $column->name)){ ?>
+        [
+        'attribute'=>'<?=$column->name?>',
+        'format' =>'html',
+        'value'=>Html::img(Yii::$app->homeUrl .$model-><?=$column->name?>,['width'=>'120px'])
+        ],
+      <?php  }else {
+            echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        }
     }
 }
 ?>

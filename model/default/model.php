@@ -6,7 +6,7 @@ use yii\helpers\VarDumper;
  */
 
 /* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\model\Generator */
+/* @var $generator zc\gii\model\Generator */
 /* @var $tableName string full table name */
 /* @var $className string class name */
 /* @var $tableSchema yii\db\TableSchema */
@@ -22,7 +22,7 @@ namespace <?= $generator->ns ?>;
 use Yii;
 
 /**
- * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
+ * "<?= $generator->generateTableName($tableName) ?>"表的model
  *
 <?php foreach ($tableSchema->columns as $column): ?>
  * @property <?= "{$column->phpType} \${$column->name}\n" ?>

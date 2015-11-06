@@ -8,7 +8,7 @@ use yii\helpers\StringHelper;
 
 
 /* @var $this yii\web\View */
-/* @var $generator zc\gii\crud\Generator */
+/* @var $generator yii\gii\generators\crud\Generator */
 
 $controllerClass = StringHelper::basename($generator->controllerClass);
 $modelClass = StringHelper::basename($generator->modelClass);
@@ -23,17 +23,6 @@ $pks = $class::primaryKey();
 $urlParams = $generator->generateUrlParams();
 $actionParams = $generator->generateActionParams();
 $actionParamComments = $generator->generateActionParamComments();
-
-$tableSchema = $class::getTableSchema();
-$columnNames = $tableSchema->columnNames;
-$ifUpfile = function($columnNames){
-    foreach ($columnNames as $column) {
-        if(preg_match('/^(img|image|file)/i', $column)) {
-            return true;
-        }
-    }
-    return false;
-};
 
 echo "<?php\n";
 ?>
@@ -56,9 +45,7 @@ use yii\data\ActiveDataProvider;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-<?php if($ifUpfile){ ?>
-use yii\web\UploadedFile;
-<?php }?>
+
 /**
  * <?= $controllerClass ?> 控制器对 <?= $modelClass ?> 模型 CRUD 操作.
  */
@@ -125,8 +112,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
                 <?php
-
-                foreach ($columnNames as $column) {
+                $class = $modelClass;
+                $tableSchema =$class::getTableSchema();
+                $tableSchema->columnNames;
+                foreach ($tableSchema->columnNames as $column) {
                     if(preg_match('/^(img|image|file)/i', $column)){ ?>
                 $uploadFile = UploadedFile::getInstance($model,'<?=$column?>');
                 $newurl = "uploads/" . date('YmdHis-').rand(100,999). '.' .
@@ -160,32 +149,25 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionUpdate(<?= $actionParams ?>)
     {
         $model = $this->findModel(<?= $actionParams ?>);
-        <?php
-        foreach ($columnNames as $column) {
-            if(preg_match('/^(img|image|file)/i', $column)){?>
-                $oldUrl['<?=$column?>'] = $model-><?=$column?>;
-            <?php }
-        }
-        ?>
+
         if ($model->load(Yii::$app->request->post())) {
         if ($model->validate()) {
-	<?php
-        foreach ($columnNames as $column) {
-            if(preg_match('/^(img|image|file)/i', $column)){?>
+        <?php
+        $class = $modelClass;
+        $tableSchema =$class::getTableSchema();
+        $tableSchema->columnNames;
+        foreach ($tableSchema->columnNames as $column) {
+            if(preg_match('/^(img|image|file)/i', $column)){ ?>
                 $uploadFile = UploadedFile::getInstance($model,'<?=$column?>');
-                if($uploadFile) {
-                    $newurl = "uploads/" . date('YmdHis-').rand(100,999). '.' .
-                    $uploadFile->extension;
-                    $uploadFile->saveAs($newurl);
-                    $model-><?=$column?> = $newurl;
-                }else{
-                    $model-><?=$column?> = $oldUrl['<?=$column?>'];
-                }
-		 <?php }
-	}
-	?>
+                $newurl = "uploads/" . date('YmdHis-').rand(100,999). '.' .
+                $uploadFile->extension;
+                $uploadFile->saveAs($newurl);
+                $model-><?=$column?> = $newurl;
+            <?php}
+        }
+        ?>
                 $model->save();
-           	 return $this->redirect(['view', <?= $urlParams ?>]);
+                return $this->redirect(['view', <?= $urlParams ?>]);
             }else{
                 return $this->render('create', [
                     'model' => $model,

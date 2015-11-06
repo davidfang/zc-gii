@@ -226,7 +226,7 @@ class Generator extends \yii\gii\Generator
         if ($tableSchema === false || !isset($tableSchema->columns[$attribute])) {
             if (preg_match('/^(password|pass|passwd|passcode)$/i', $attribute)) {
                 return "\$form->field(\$model, '$attribute')->passwordInput()";
-            } elseif(preg_match('/^(img|image)$/i', $attribute)){
+            } elseif(preg_match('/^(img|image|file)/i', $attribute)){
                 return "\$form->field(\$model, '$attribute')->fileInput()";
             } else {
                 return "\$form->field(\$model, '$attribute')";
@@ -245,7 +245,7 @@ class Generator extends \yii\gii\Generator
         } else {
             if (preg_match('/^(password|pass|passwd|passcode)$/i', $column->name)) {
                 $input = 'passwordInput';
-            } elseif(preg_match('/^(img|image)$/i', $attribute)) {
+            } elseif(preg_match('/^(img|image|file)/i', $attribute)) {
                 $input = 'fileInput';
             }else{
                 $input = 'textInput';
@@ -266,7 +266,7 @@ class Generator extends \yii\gii\Generator
                     return "\$form->field(\$model, '$attribute')->dropDownList("
                     . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => '请选择'])";
                 }
-            }elseif($column->phpType !== 'string' || $column->size === null) {
+            }elseif($column->phpType !== 'string' || $column->size === null || $input == 'fileInput') {
                 return "\$form->field(\$model, '$attribute')->$input()";
             } else {
                 return "\$form->field(\$model, '$attribute')->$input(['maxlength' => $column->size])";

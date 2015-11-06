@@ -80,10 +80,10 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 
             ],
     <?php
-        }elseif(is_array($column->enumValues) && !empty($column->enumValues) ){
-    ?>
+        }elseif(is_array($column->enumValues) && !empty($column->enumValues) ) {
+            ?>
             [
-            'attribute' => '<?=$column->name?>',
+            'attribute' => '<?= $column->name ?>',
             'format' => 'html',
             'value' => function ($model) {
             $class = 'label-success';
@@ -91,18 +91,27 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             $class = 'label-danger';
             $class = 'label-info';
 
-            return '<span class="label ' . $class . '">' . ($model->options['<?=$column->name?>'][$model-><?=$column->name?>] ) . '</span>';
+            return '<span class="label ' . $class . '">' . ($model->options['<?= $column->name ?>'][$model-><?= $column->name ?>] ) . '</span>';
             },
             'options'=>['style' => 'width:90px;'],
             'filter' => Html::activeDropDownList(
             $searchModel,
-            '<?=$column->name?>',
-            $searchModel->options['<?=$column->name?>'],
+            '<?= $column->name ?>',
+            $searchModel->options['<?= $column->name ?>'],
             ['class' => 'form-control', 'prompt' => '请选择']
             )
             ],
-    <?php
-        }else{
+        <?php
+        }elseif(preg_match('/^(img|image)/i', $column->name)){ ?>
+            [
+            'attribute' => '<?=$column->name ?>',
+            'format' => 'html',
+            'value' => function($model){
+            return Html::img(Yii::$app->homeUrl .$model-><?=$column->name ?>,['class'=>'img-rounded','width'=>'120px']);
+            },
+            'filter' => false
+            ],
+        <?php }else{
             echo "            $tmp_str'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
         }
 

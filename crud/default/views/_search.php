@@ -32,10 +32,12 @@ use zc\gii\bs3activeform\ActiveForm;
 <?php
 $count = 0;
 foreach ($generator->getColumnNames() as $attribute) {
-    if (++$count < 6) {
-        echo "    <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
-    } else {
-        echo "    <?php // echo " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
+    if(!preg_match('/^(img|image|file)/i', $attribute)) {
+        if (++$count < 6) {
+            echo "    <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
+        } else {
+            echo "    <?php // echo " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
+        }
     }
 }
 ?>

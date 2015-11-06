@@ -13,6 +13,15 @@ if (empty($safeAttributes)) {
     $safeAttributes = $model->attributes();
 }
 
+$columnNames = $generator->columnNames;
+$ifUpfile = function($columnNames){
+    foreach ($columnNames as $column) {
+        if(preg_match('/^(img|image|file)/i', $column)) {
+            return ",'enctype' => 'multipart/form-data'";
+        }
+    }
+    return '';
+};
 echo "<?php\n";
 ?>
 
@@ -28,7 +37,7 @@ use yii\widgets\ActiveForm;
 
     <?= "<?php " ?>$form = ActiveForm::begin([
        'id' => 'w0',
-       'options' => ['class' => 'form-horizontal'],
+       'options' => ['class' => 'form-horizontal'<?=$ifUpfile($columnNames)?>],
         'fieldConfig' => [
             'template' => "<div class=\"control-group\">{label}\n<div class=\"col-lg-2 controls\">{input}</div>\n<div class=\"col-lg-8\">{error}</div></div>",
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
