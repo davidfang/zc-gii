@@ -122,12 +122,12 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     foreach ($tableSchema->columns as $column) {
         if (is_array($column->enumValues) && count($column->enumValues) > 0) {
             foreach ($column->enumValues as $enumValue) {
-                echo "[
+                echo "                [
                 'name'=>".'$options["'.$column->name.'"]["'.$enumValue.'"]'.",
                 'jsfunction'=>'changeStatus',
                 'field'=>'{$column->name}',
                 'field_value'=>'{$enumValue}'
-                ],";
+                ],\n";
             }
         }
     }

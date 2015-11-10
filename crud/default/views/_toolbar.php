@@ -19,8 +19,8 @@ use yii\widgets\ActiveForm;
 ?>
 <div class="panel panel-default <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-toolbar">
     <?="<?php\n"?>
-    $model = new <?=$generator->modelClass?>();
     $jsfuncton = false;
+    $model = new <?=$generator->modelClass?>();
     $options = $model->options;
     foreach ($model->toolbars as $toolbar) {
         if($toolbar['jsfunction']!='changeStatus'){
@@ -28,18 +28,19 @@ use yii\widgets\ActiveForm;
         }
         echo Html::button($toolbar['name'],['class'=>'btn btn-primary btn-sm', 'onclick'=>"javascript:{$toolbar['jsfunction']}('{$toolbar['field']}','{$toolbar['field_value']}')"]);
     }
-    if($jsfuncton){
-        $this->registerJsFile('/js/<?=$generator->controllerID?>.js');
-    }
     ?>
 </div>
 <script type="text/javascript" >
     <?='<?php'?> $this->beginBlock('toolbar') ?>
     var data = new Object();  //对象
-    function changeStatus(f,v){
+    function changeStatus(f,v,k){
         data.f = f;
         data.v = v;
-        data.keys = $('#grid').yiiGridView('getSelectedRows');
+        if(k == null) {
+            data.keys = $('#grid').yiiGridView('getSelectedRows');
+        }else{
+            data.keys = {k};
+        }
         console.log(data.keys);
         if (data.keys.length==0){
             alert("至少选择一项");
@@ -52,7 +53,7 @@ use yii\widgets\ActiveForm;
             dataType:'json',
             data:data,
             success:function(data){
-                   alert(data.msg);
+                alert(data.msg);
                 console.log(data);
             }
         })

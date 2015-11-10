@@ -126,9 +126,33 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 }
 ?>
 
-            ['class' => 'yii\grid\ActionColumn','header'=>'操作'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header'=>'操作',
+                'buttons' => [
+                <?php $jsfuncton = false;
+                $model =  new $generator->searchModelClass;
+                $options = $model->options;
+                $buttons = '';
+                foreach ($model->toolbars as $toolbar) {
+                    $button = $toolbar['field'].'_'.$toolbar['field_value'];
+                    $buttons .='{'.$button .'} ';
+                if($toolbar['jsfunction']!='changeStatus'){
+                    $jsfuncton = true;
+                } ?>
+
+                    '<?=$button?>'=> function($url, $model, $key){
+                         return Html::button('<?=$toolbar['name']?>',['class'=>'btn btn-primary btn-sm','onclick'=>"javascript:<?=$toolbar['jsfunction']?>('<?=$toolbar['field'] ?>','<?=$toolbar['field_value'] ?>','{$model-><?=implode(',',$model->getTableSchema()->primaryKey);?>}');"]);
+                    },
+
+
+                <?php } ?>
+                ],
+                'template' => '<?=$buttons?> {view} {update}{delete} ',
+
+            ]
         ],
-    ]); ?>
+    ]);
 <?php else: ?>
     <?= "<?= " ?>ListView::widget([
         'dataProvider' => $dataProvider,
@@ -136,7 +160,9 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         'itemView' => function ($model, $key, $index, $widget) {
             return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>]);
         },
-    ]) ?>
+    ])
 <?php endif; ?>
-
+    <?php if($jsfuncton){
+        echo '   $this->registerJsFile("/js/'.$generator->controllerID.'.js");';
+    }  ?>?>
 </div>
