@@ -63,6 +63,18 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     }
 
     /**
+     * 设置列表页显示列和搜索列
+     * @inheritdoc
+     */
+    public function getIndexLists()
+    {
+        return [
+<?php foreach ($labels as $name => $label): ?>
+            <?= "'$name',// " . $generator->generateString($label) . ",\n" ?>
+<?php endforeach; ?>
+        ];
+    }
+    /**
      * @inheritdoc
      */
     public function attributeLabels()

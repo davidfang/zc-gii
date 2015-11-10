@@ -8,7 +8,8 @@ use yii\helpers\StringHelper;
 
 $urlParams = $generator->generateUrlParams();
 $nameAttribute = $generator->getNameAttribute();
-
+$model = new $generator->modelClass ();
+$indexLists = $model->indexLists;
 echo "<?php\n";
 ?>
 
@@ -46,75 +47,78 @@ $this->params['breadcrumbs'][] = $this->title;
 $count = 0;
 if (($tableSchema = $generator->getTableSchema()) === false) {
     foreach ($generator->getColumnNames() as $name) {
-        if (++$count < 6) {
-            echo "            '" . $name . "',\n";
-        } else {
-            echo "            // '" . $name . "',\n";
+        if(in_array($name,$indexLists)) {
+            if (++$count < 6) {
+                echo "            '" . $name . "',\n";
+            } else {
+                echo "            // '" . $name . "',\n";
+            }
         }
     }
 } else {
     foreach ($tableSchema->columns as $column) {
-        $format = $generator->generateColumnFormat($column);
-        if (++$count < 6) {
-            $tmp_str = '';
-            //echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-        } else {
-            $tmp_str = '//';
-            //echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-        }
+        if(in_array($column->name,$indexLists)) {
+            $format = $generator->generateColumnFormat($column);
+            if (++$count < 6) {
+                $tmp_str = '';
+                //echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            } else {
+                $tmp_str = '//';
+                //echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            }
 
-        if(in_array($column->type,['datetime','timestamp', 'time', 'date'])){
-            ?>
-            [
-                'attribute' => '<?=$column->name?>',
+            if (in_array($column->type, ['datetime', 'timestamp', 'time', 'date'])) {
+                ?>
+                [
+                'attribute' => '<?= $column->name ?>',
                 'format' => 'html',
-                'value' => '<?=$column->name?>',
+                'value' => '<?= $column->name ?>',
                 'filter' =>kartik\widgets\DatePicker::widget(
-                    [  'model'=>$searchModel,
-                        'name'=>Html::getInputName($searchModel, '<?=$column->name?>'),
-                        'value'=>$searchModel-><?=$column->name?>,
-                       'pluginOptions'=>['format' => 'yyyy-mm-dd',
-                                            'todayHighlight' => true,]
-                    ]),
+                [  'model'=>$searchModel,
+                'name'=>Html::getInputName($searchModel, '<?= $column->name ?>'),
+                'value'=>$searchModel-><?= $column->name ?>,
+                'pluginOptions'=>['format' => 'yyyy-mm-dd',
+                'todayHighlight' => true,]
+                ]),
                 'options'=>['style' => 'width:200px;'],
 
-            ],
-    <?php
-        }elseif(is_array($column->enumValues) && !empty($column->enumValues) ) {
-            ?>
-            [
-            'attribute' => '<?= $column->name ?>',
-            'format' => 'html',
-            'value' => function ($model) {
-            $class = 'label-success';
-            $class = 'label-warning';
-            $class = 'label-danger';
-            $class = 'label-info';
+                ],
+            <?php
+            } elseif (is_array($column->enumValues) && !empty($column->enumValues)) {
+                ?>
+                [
+                'attribute' => '<?= $column->name ?>',
+                'format' => 'html',
+                'value' => function ($model) {
+                $class = 'label-success';
+                $class = 'label-warning';
+                $class = 'label-danger';
+                $class = 'label-info';
 
-            return '<span class="label ' . $class . '">' . ($model->options['<?= $column->name ?>'][$model-><?= $column->name ?>] ) . '</span>';
-            },
-            'options'=>['style' => 'width:90px;'],
-            'filter' => Html::activeDropDownList(
-            $searchModel,
-            '<?= $column->name ?>',
-            $searchModel->options['<?= $column->name ?>'],
-            ['class' => 'form-control', 'prompt' => '请选择']
-            )
-            ],
-        <?php
-        }elseif(preg_match('/^(img|image)/i', $column->name)){ ?>
-            [
-            'attribute' => '<?=$column->name ?>',
-            'format' => 'html',
-            'value' => function($model){
-            return Html::img(Yii::$app->homeUrl .$model-><?=$column->name ?>,['class'=>'img-rounded','width'=>'120px']);
-            },
-            'filter' => false
-            ],
-        <?php }else{
-            echo "            $tmp_str'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+                return '<span class="label ' . $class . '">' . ($model->options['<?= $column->name ?>'][$model-><?= $column->name ?>] ) . '</span>';
+                },
+                'options'=>['style' => 'width:90px;'],
+                'filter' => Html::activeDropDownList(
+                $searchModel,
+                '<?= $column->name ?>',
+                $searchModel->options['<?= $column->name ?>'],
+                ['class' => 'form-control', 'prompt' => '请选择']
+                )
+                ],
+            <?php
+            } elseif (preg_match('/^(img|image)/i', $column->name)) { ?>
+                [
+                'attribute' => '<?= $column->name ?>',
+                'format' => 'html',
+                'value' => function($model){
+                return Html::img(Yii::$app->homeUrl .$model-><?= $column->name ?>,['class'=>'img-rounded','width'=>'120px']);
+                },
+                'filter' => false
+                ],
+            <?php } else {
+                echo "            $tmp_str'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            }
         }
-
 
 
 
