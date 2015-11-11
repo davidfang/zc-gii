@@ -135,7 +135,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 'header'=>'操作',
                 'buttons' => [
                 <?php $jsfuncton = false;
-                $model =  new $generator->searchModelClass;
+                $model =  new $generator->modelClass;
                 $options = $model->options;
                 $buttons = '';
                 foreach ($model->toolbars as $toolbar) {
