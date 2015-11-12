@@ -75,7 +75,10 @@ $config['bootstrap'][] = 'gii';
 * checkbox、radio、下拉列表字段在建立数据表字段时统一使用enum形式；
 如需set形式在生成完代码之后修改数据库字段属性，字段名称分别以_c,_r,_d结束，
 代表建立checkbox、radio、下拉列表；
-* 如需要建立上传图片或文件，直接将字段名称定为img或者image或者file开头，程序会自动生成上传文件的按钮；
+* 如需要建立上传图片或文件，直接将字段名称定为img或者image或者file开头，程序会自动生成上传文件的按钮,修改model中rules规则，将image改为非必须，加上如下规则；
+```php
+['primaryImage', 'file', 'extensions' => ['png', 'jpg', 'gif'], 'maxSize' => 1024*1024*1024],
+```
 * 日期以date形式或者以date、datetime结束，会自动生成日历选择框
 
 Power By David Fang

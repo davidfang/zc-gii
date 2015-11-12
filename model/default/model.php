@@ -22,7 +22,7 @@ namespace <?= $generator->ns ?>;
 use Yii;
 
 /**
- * "<?= $generator->generateTableName($tableName) ?>"表的model
+ * "<?= $tableName ?>"表的model
  *
 <?php foreach ($tableSchema->columns as $column): ?>
  * @property <?= "{$column->phpType} \${$column->name}\n" ?>
