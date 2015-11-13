@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
 /* @var $model <?= ltrim($generator->searchModelClass, '\\') ?> */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<div class="panel panel-default <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-toolbar">
+<div class="panel panel-default <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-toolbar">批量操作：
     <?="<?php\n"?>
     $jsfuncton = false;
     $model = new <?=$generator->modelClass?>();
