@@ -4,7 +4,7 @@ zc-gii
 ###安装方法
 ###安装
 ```
-php composer.phar require zc/yii2-adminlte-asset "2.*"
+php composer.phar require zc/gii
 ```
 ###配置
 ####V1.0配置
