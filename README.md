@@ -4,7 +4,12 @@ zc-gii
 ###安装方法
 ###安装
 ```
-php composer.phar require zc/gii
+php composer.phar require  --prefer-dist   "zc/gii":"~2.0.0"
+
+or add
+
+"zc/gii": "dev-master"
+
 ```
 ###配置
 ####V1.0配置
