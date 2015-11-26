@@ -46,7 +46,7 @@ use yii\widgets\ActiveForm;
             alert("至少选择一项");
             return;
         }
-        var url = '<?='<?'?>= Yii::$app->urlManager->createUrl('ads-postion/change-status-ajax') ?>';
+        var url = '<?='<?'?>= Yii::$app->urlManager->createUrl('<?=$generator->controllerID ?>/change-status-ajax') ?>';
         $.ajax({
             url: url,
             type:'get',//必须使用,不知道为什么

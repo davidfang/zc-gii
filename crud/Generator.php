@@ -254,17 +254,13 @@ class Generator extends \yii\gii\Generator
                 $model = new $this->modelClass();
                 $dropDownOptions =$model->options[$column->name];
                 if(preg_match('/_r$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->radioList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                    return "\$form->field(\$model, '$attribute')->radioList(\$model->options['".$column->name."'], ['prompt' => ''])";
                 }elseif(preg_match('/_c$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->checkboxList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                    return "\$form->field(\$model, '$attribute')->checkboxList(\$model->options['".$column->name."'], ['prompt' => ''])";
                 }elseif(preg_match('/_d$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->dropDownList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => '请选择'])";
+                    return "\$form->field(\$model, '$attribute')->dropDownList(\$model->options['".$column->name."'], ['prompt' => '请选择'])";
                 }else {
-                    return "\$form->field(\$model, '$attribute')->dropDownList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => '请选择'])";
+                    return "\$form->field(\$model, '$attribute')->dropDownList(\$model->options['".$column->name."'], ['prompt' => '请选择'])";
                 }
             }elseif($column->phpType !== 'string' || $column->size === null || $input == 'fileInput') {
                 return "\$form->field(\$model, '$attribute')->$input()";
@@ -302,17 +298,13 @@ class Generator extends \yii\gii\Generator
                 $model = new $this->modelClass();
                 $dropDownOptions =$model->options[$column->name];
                 if(preg_match('/_r$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->inline()->radioList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                    return "\$form->field(\$model, '$attribute')->inline()->radioList(\$model->options['".$column->name."'], ['prompt' => ''])";
                 }elseif(preg_match('/_c$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->inline()->checkboxList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+                    return "\$form->field(\$model, '$attribute')->inline()->checkboxList(\$model->options['".$column->name."'], ['prompt' => ''])";
                 }elseif(preg_match('/_d$/i', $column->name)){
-                    return "\$form->field(\$model, '$attribute')->dropDownList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => '请选择'])";
+                    return "\$form->field(\$model, '$attribute')->dropDownList(\$model->options['".$column->name."'], ['prompt' => '请选择'])";
                 }else {
-                    return "\$form->field(\$model, '$attribute')->dropDownList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => '请选择'])";
+                    return "\$form->field(\$model, '$attribute')->dropDownList(\$model->options['".$column->name."'], ['prompt' => '请选择'])";
                 }
             }else {
                 return "\$form->field(\$model, '$attribute')";
