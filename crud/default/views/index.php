@@ -98,12 +98,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 return '<span class="label ' . $class . '">' . ($model->options['<?= $column->name ?>'][$model-><?= $column->name ?>] ) . '</span>';
                 },
                 'options'=>['style' => 'width:90px;'],
-                'filter' => Html::activeDropDownList(
-                $searchModel,
-                '<?= $column->name ?>',
-                $searchModel->options['<?= $column->name ?>'],
-                ['class' => 'form-control', 'prompt' => '请选择']
-                )
+                'filter' => $searchModel->options['<?= $column->name ?>'],
                 ],
             <?php
             } elseif (preg_match('/^(img|image)/i', $column->name)) { ?>
@@ -146,7 +141,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 } ?>
 
                     '<?=$button?>'=> function($url, $model, $key){
-                         return Html::button('<?=$toolbar['name']?>',['class'=>'btn btn-primary btn-sm','onclick'=>"javascript:<?=$toolbar['jsfunction']?>('<?=$toolbar['field'] ?>','<?=$toolbar['field_value'] ?>','{$model-><?=implode(',',$model->getTableSchema()->primaryKey);?>}');"]);
+                         return $model->($toolbar['name'])==$toolbar['field_value']?'':Html::button('<?=$toolbar['name']?>',['class'=>'btn btn-primary btn-sm','onclick'=>"javascript:<?=$toolbar['jsfunction']?>('<?=$toolbar['field'] ?>','<?=$toolbar['field_value'] ?>','{$model-><?=implode(',',$model->getTableSchema()->primaryKey);?>}');"]);
                     },
 
 
