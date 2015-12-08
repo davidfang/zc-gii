@@ -55,6 +55,7 @@ use yii\widgets\ActiveForm;
             success:function(data){
                 alert(data.msg);
                 console.log(data);
+                location.reload();
             }
         })
     }
