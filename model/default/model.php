@@ -74,6 +74,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php endforeach; ?>
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -95,11 +96,13 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         <?= $relation[0] . "\n" ?>
     }
 <?php endforeach; ?>
+
     /**
-    * 多选项配置
-    * @return array
-    */
-    public function getOptions(){
+     * 多选项配置
+     * @return array
+     */
+    public function getOptions()
+    {
     <?php
     $options = [];
     foreach ($tableSchema->columns as $column) {
@@ -112,21 +115,23 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     echo '      return '.VarDumper::export($options) .";\n";
     ?>
     }
+
     /**
-    * toolbars工具栏按钮设定
-    * 字段为枚举类型时存在
-    * 默认为复选项的值，
-    * jsfunction默认值为changeStatus
-    * @return array
-    * 返回值举例：
-    * [
-        ['name'=>'忘却',//名称
-        'jsfunction'=>'ask',//js操作方法，默认为：changeStatus
-        'field'=>'status_2',//操作字段名
-        'field_value'=>'3'],//修改后的值
-        ]
-    */
-    public function getToolbars(){
+     * toolbars工具栏按钮设定
+     * 字段为枚举类型时存在
+     * 默认为复选项的值，
+     * jsfunction默认值为changeStatus
+     * @return array
+     * 返回值举例：
+     * [
+     *  ['name'=>'忘却',//名称
+     *  'jsfunction'=>'ask',//js操作方法，默认为：changeStatus
+     *  'field'=>'status_2',//操作字段名
+     *  'field_value'=>'3'],//修改后的值
+     *  ]
+     */
+    public function getToolbars()
+    {
         $attributeLabels = $this->attributeLabels();
         $options = $this->options;
         return [
