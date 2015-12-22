@@ -23,11 +23,11 @@ use zc\gii\bs3activeform\ActiveForm;
     <?= "<?php " ?>$form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
-    'options' => ['class' => 'form-inline'],
-    'fieldConfig' => [
-    'template' => " {label}\n <div class='col-sm-7'>{input}</div>",
-'labelOptions' => ['class' => 'col-lg-4 control-label'],
-],
+        'options' => ['class' => 'form-inline'],
+        'fieldConfig' => [
+            'template' => " {label}\n <div class='col-sm-7'>{input}</div>",
+            'labelOptions' => ['class' => 'col-lg-4 control-label'],
+        ],
     ]); ?>
 
 <?php
