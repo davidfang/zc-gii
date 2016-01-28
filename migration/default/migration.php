@@ -24,7 +24,7 @@ class <?= $migrationName ?> extends \yii\db\Migration
         
         $this->createTable('<?= $table['name'] ?>', [
 <?php foreach ($table['columns'] as $column => $definition): ?>
-            <?= "'$column' => $definition"?>,
+            <?= "'$column' => '$definition'"?>,
 <?php endforeach;?>
 <?php if(isset($table['primary'])): ?>
             <?= "'{$table['primary']}'" ?>,

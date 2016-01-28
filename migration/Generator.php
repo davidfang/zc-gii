@@ -208,7 +208,6 @@ class Generator extends \yii\gii\Generator
         }
     }
     protected $constans;
-
     /**
      *
      * @param \yii\db\ColumnSchema $column
@@ -220,38 +219,23 @@ class Generator extends \yii\gii\Generator
             $this->constans = [];
             $ref = new \ReflectionClass(Schema::className());
             foreach ($ref->getConstants() as $constName => $constValue) {
+                //echo $constName .'==='.$constValue .'<br>';
                 if (strpos($constName, 'TYPE_') === 0) {
-                    $this->constans[$constValue] = 'Schema::'.$constName;
+                    $this->constans[$constValue] = 'Schema::' . $constName;
                 }
             }
-        }
-        if ($column->type !== Schema::TYPE_BOOLEAN && $column->size !== null) {
-            $size = [$column->size];
-            if ($column->scale !== null) {
-                $size[] = $column->scale;
-            }
-            $size = '('.implode(',', $size).')';
-        } else {
-            $size = '';
-        }
-
-        if ($column->defaultValue instanceof Expression || is_numeric($column->defaultValue)) {
-            $quote = '"';
-        } else {
-            $quote = "'";
-        }
-        if(!empty($column->comment)) {
-            $comment = ' COMMENT ' . $quote . $column->comment . $quote;
+        }//var_dump($column);
+        $autoIncrement = $column->autoIncrement ? 'AUTO_INCREMENT':'';
+        $dbType = str_replace("'",'"',$column->dbType);
+        $allowNull = $column->allowNull ? '' :'NOT NULL';
+        $defaultValue = is_null($column->defaultValue)? 'NULL':'"'.$column->defaultValue .'"';
+        $comment = empty($column->comment)?'':'COMMENT "'.$column->comment.'"';
+        if($column->isPrimaryKey){
+            return $return = "$dbType $allowNull $autoIncrement  $comment";
         }else{
-            $comment = '';
-        }
-        if (isset($this->constans[$column->type])) {
-            return [$this->constans[$column->type], $size ,$comment];
-        } else {
-            return [$column->dbType, '' ,$comment];
+            return $return = "$dbType $allowNull DEFAULT $defaultValue $autoIncrement $comment";
         }
     }
-
     /**
      * Generates validation rules for the specified table.
      * @param \yii\db\TableSchema $table the table schema
@@ -262,35 +246,7 @@ class Generator extends \yii\gii\Generator
         $columns = [];
         $needPK = true;
         foreach ($table->columns as $column) {
-            if ($column->autoIncrement) {
-                $columns[$column->name] = $column->type == Schema::TYPE_BIGINT ? 'Schema::TYPE_BIGPK' : 'Schema::TYPE_PK';
-                $needPK = false;
-                continue;
-            }
-
-            //list($type, $size) = $this->getSchemaType($column);
-            list($type, $extra,$comment) = $this->getSchemaType($column);
-            //$extra = '';
-            $quote = "'";
-            if (!$column->allowNull) {
-                $extra .= ' NOT NULL';
-            }
-
-            if ($column->defaultValue !== null) {
-                $extra .= ' DEFAULT ';
-                if ($column->defaultValue instanceof Expression || is_numeric($column->defaultValue)) {
-                    $extra .= $column->defaultValue;
-                } else {
-                    $extra .= "'{$column->defaultValue}'";
-                    $quote = '"';
-                }
-            }
-
-            if (!empty($extra)) {
-                //$type = "$type . {$quote}$size  $extra {$quote}";
-                $type = "$type . {$quote}  $extra $comment{$quote}";
-            }
-            $columns[$column->name] = $type;
+            $columns[$column->name] = $this->getSchemaType($column);;
         }
         if ($needPK && !empty($table->primaryKey)) {
             $pks = implode(']], [[', $table->primaryKey);
