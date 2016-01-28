@@ -57,7 +57,12 @@ $config['bootstrap'][] = 'gii';
                     'zc-gii' => '@vendor/zc/gii/extension/default',
                 ]
             ],
-
+            'migrate' => [
+                'class' => 'zc\gii\migration\Generator',
+                'templates' => [
+                    'zc-gii' => '@vendor/zc/gii/migration/default',
+                ]
+            ],
         ]
 
     ];

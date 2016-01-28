@@ -11,4 +11,5 @@ echo $form->field($generator, 'migrationTime')->widget('yii\widgets\MaskedInput'
 echo $form->field($generator, 'migrationName');
 echo $form->field($generator, 'db');
 echo $form->field($generator, 'useTablePrefix')->checkbox();
+echo $form->field($generator, 'exportData')->checkbox();
 echo $form->field($generator, 'generateRelations')->checkbox();

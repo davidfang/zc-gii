@@ -9,9 +9,11 @@ namespace zc\gii\migration;
 
 use Yii;
 use yii\db\Connection;
+use yii\db\Query;
 use yii\db\Schema;
 use yii\gii\CodeFile;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * This generator will generate one or multiple ActiveRecord classes for the specified database table.
@@ -28,6 +30,7 @@ class Generator extends \yii\gii\Generator
     public $tableName;
     public $generateRelations = true;
     public $useTablePrefix = false;
+    public $exportData = false;
 
     /**
      * @inheritdoc
@@ -68,6 +71,7 @@ class Generator extends \yii\gii\Generator
             [['db'], 'validateDb'],
             [['tableName'], 'validateTableName'],
             [['generateRelations'], 'boolean'],
+            [['exportData'], 'boolean'],
             [['useTablePrefix'], 'boolean'],
         ]);
     }
@@ -83,6 +87,7 @@ class Generator extends \yii\gii\Generator
             'tableName' => 'Table Name',
             'migrationName' => 'Migration Name',
             'migrationTime' => 'Migration Time',
+            'exportData' => 'Export Data',
             'generateRelations' => 'Generate Relations',
         ]);
     }
@@ -104,6 +109,7 @@ class Generator extends \yii\gii\Generator
             'generateRelations' => 'This indicates whether the generator should generate relations based on
                 foreign key constraints it detects in the database. Note that if your database contains too many tables,
                 you may want to uncheck this option to accelerate the code generation process.',
+            'exportData' => '是否导出数据',
             'useTablePrefix' => 'This indicates whether the table name returned by the generated ActiveRecord class
                 should consider the <code>tablePrefix</code> setting of the DB connection. For example, if the
                 table name is <code>tbl_post</code> and <code>tablePrefix=tbl_</code>, the ActiveRecord class
@@ -161,12 +167,25 @@ class Generator extends \yii\gii\Generator
             } else {
                 $primary = null;
             }
+            $data = [];
+            if($this->exportData) {
+                $query = (new Query())->from($tableName);
+                foreach ($query->batch(10) as $values) {
+                    $data = array_merge($data, ArrayHelper::toArray($values));
+                    //var_dump(ArrayHelper::toArray($values));
+                }
+            }
+            //var_dump($data);
+            //var_dump(array_keys($tableSchema));
             $tables[$tableSchema->name] = [
                 'name' => $this->generateTableName($tableSchema->name),
                 'columns' => $columns,
                 'primary' => $primary,
                 'relations' => isset($relations[$tableSchema->name]) ? $relations[$tableSchema->name] : [],
+                'data' => $data,
             ];
+
+
         }
         $migrationName = 'm'.$this->migrationTime.'_'.$this->migrationName;
         $file = rtrim(Yii::getAlias($this->migrationPath), '/')."/{$migrationName}.php";

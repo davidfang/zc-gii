@@ -34,6 +34,17 @@ class <?= $migrationName ?> extends \yii\db\Migration
 <?php endforeach;?>
         ], $tableOptions);
 <?php endforeach;?>
+<?php
+if(!empty($table['data'])) {
+    $datas = [];
+    foreach ($table['data'] as $data) {
+        $datas[] = "\n            ('" . implode("','", $data) . "')";
+    }
+?>
+    $sql = "INSERT INTO <?= $table['name'] ?> (<?="`" . implode("`,`", array_keys($table['columns'])) . "`"?>) VALUES
+<?= implode(',',$datas);?>;";
+        $this->execute($sql);
+<?php } ?>
     }
 
     public function down()
