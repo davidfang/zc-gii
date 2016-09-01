@@ -19,7 +19,7 @@ echo "<?php\n";
 
 namespace <?= $generator->ns ?>;
 
-use Yii;
+use <?= $generator->baseClass ?>;
 
 /**
  * "<?= $tableName ?>"表的model
@@ -67,7 +67,13 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     */
     public function behaviors(){
         return [
-            yii\behaviors\TimestampBehavior::className(),
+                [
+                    'class' => TimestampBehavior::className(),
+                    'attributes' => [
+                        ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],//可以根据需要去掉updated_at
+                        ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],//可以根据需要去掉updated_at
+                    ],
+                ],
         ];
     }
     /**
