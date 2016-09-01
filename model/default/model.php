@@ -61,7 +61,15 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     {
         return [<?= "\n            " . implode(",\n            ", $rules) . "\n        " ?>];
     }
-
+    /**
+    * 设置自动创建和更新时间的操作
+    * @inheritdoc
+    */
+    public function behaviors(){
+        return [
+            yii\behaviors\TimestampBehavior::className(),
+        ];
+    }
     /**
      * 设置列表页显示列和搜索列
      * @inheritdoc
