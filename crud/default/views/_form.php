@@ -26,27 +26,24 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\bootstrap\ActiveForm */
 ?>
 
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
 
-    <?= "<?php " ?>$form = ActiveForm::begin([
-       'id' => 'w0',
-       'options' => ['class' => 'form-horizontal' <?=$ifUpfile($columnNames)?>],
-        'fieldConfig' => [
-            'template' => "<div class=\"control-group\">{label}\n<div class=\"col-lg-2 controls\">{input}</div>\n<div class=\"col-lg-8\">{error}</div></div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
+    <?= "<?php " ?>$form = ActiveForm::begin(); ?>
 
 <?php foreach ($generator->getColumnNames() as $attribute) {
-    if (in_array($attribute, $safeAttributes) and $attribute !='id') {
-        echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+    if (in_array($attribute, $safeAttributes) and  $attribute !='id') {
+        if(in_array($attribute,['created_at','updated_at'])){//创建和修改时间不能改
+            echo "    <?php //= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+        }else {
+            echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+        }
     }
 } ?>
     <div class="form-group">

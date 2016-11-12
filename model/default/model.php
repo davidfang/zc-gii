@@ -20,7 +20,7 @@ echo "<?php\n";
 namespace <?= $generator->ns ?>;
 
 use <?= $generator->baseClass ?>;
-
+use yii\behaviors\TimestampBehavior;
 /**
  * "<?= $tableName ?>"表的model
  *

@@ -90,6 +90,7 @@ $config['bootstrap'][] = 'gii';
 ['primaryImage', 'file', 'extensions' => ['png', 'jpg', 'gif'], 'maxSize' => 1024*1024*1024],
 ```
 * 日期以date形式或者以date、datetime结束，会自动生成日历选择框
+* created_at和updated 创建和修改时间form表单默认不会显示，如要显示自行去掉注释
 
 Power By David Fang
 

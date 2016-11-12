@@ -56,9 +56,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'format' =>'html',
         'value'=>Html::img(Yii::$app->homeUrl .$model-><?= $column->name ?>,['width'=>'120px'])
         ],
-     <?php } else {
-                echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-            }
+            <?php } elseif (in_array($column->name,['created_at','updated_at'])) { ?>
+                <?php  echo "            '" .$column->name .":datetime'," ?>
+             <?php } else {
+                        echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+                    }
         }
     }
     ?>],

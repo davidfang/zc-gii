@@ -237,8 +237,8 @@ class Generator extends \yii\gii\Generator
             return "\$form->field(\$model, '$attribute')->checkbox()";
         } elseif ($column->type === 'text') {
             return "\$form->field(\$model, '$attribute')->textarea(['rows' => 6])";
-        } elseif ($column->type === 'date') {
-            return "\$form->field(\$model, '$attribute')->widget(\\kartik\\widgets\\DatePicker::className(),['pluginOptions' => [
+        } elseif (in_array($column->type,['datetime','timestamp', 'time', 'date'])  ) {
+            return "\$form->field(\$model, '$attribute')->widget(\\kartik\\date\\DatePicker::className(),['pluginOptions' => [
         'format' => 'yyyy-mm-dd',
         'todayHighlight' => true
     ]])";

@@ -67,12 +67,12 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 //echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
             }
 
-            if (in_array($column->type, ['datetime', 'timestamp', 'time', 'date'])) {
+            if (in_array($column->type, ['datetime', 'timestamp', 'time', 'date']) or in_array($column->name, ['created_at','updated_at'])) {
                 ?>[
                 'attribute' => '<?= $column->name ?>',
                 'format' => 'html',
                 'value' => '<?= $column->name ?>',
-                'filter' => kartik\widgets\DatePicker::widget(
+                'filter' => kartik\date\DatePicker::widget(
                     ['model' => $searchModel,
                        'name' => Html::getInputName($searchModel, '<?= $column->name ?>'),
                        'value' => $searchModel-><?= $column->name ?>,
