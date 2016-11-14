@@ -39,7 +39,9 @@ use yii\bootstrap\ActiveForm;
 
 <?php foreach ($generator->getColumnNames() as $attribute) {
     if (in_array($attribute, $safeAttributes) and  $attribute !='id') {
-        if(in_array($attribute,['created_at','updated_at'])){//创建和修改时间不能改
+        if($attribute == 'base_url'){//上传文件的基本路径不用显示表单
+            //
+        }else if(in_array($attribute,['created_at','updated_at'])){//创建和修改时间不能改
             echo "    <?php //= " . $generator->generateActiveField($attribute) . " ?>\n\n";
         }else {
             echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";

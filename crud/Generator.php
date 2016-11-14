@@ -227,7 +227,12 @@ class Generator extends \yii\gii\Generator
             if (preg_match('/^(password|pass|passwd|passcode)$/i', $attribute)) {
                 return "\$form->field(\$model, '$attribute')->passwordInput()";
             } elseif(preg_match('/^(img|image|file)/i', $attribute)){
-                return "\$form->field(\$model, '$attribute')->fileInput()";
+                return "\$form->field(\$model, '".trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$attribute),'_- ')."')->widget(
+        trntv\\filekit\\widget\\Upload::className(),
+        [
+            'url' => ['/file-storage/upload'],
+            'maxFileSize' => 2000000, // 2 MiB
+        ]);";
             } else {
                 return "\$form->field(\$model, '$attribute')";
             }
@@ -238,10 +243,12 @@ class Generator extends \yii\gii\Generator
         } elseif ($column->type === 'text') {
             return "\$form->field(\$model, '$attribute')->textarea(['rows' => 6])";
         } elseif (in_array($column->type,['datetime','timestamp', 'time', 'date'])  ) {
-            return "\$form->field(\$model, '$attribute')->widget(\\kartik\\date\\DatePicker::className(),['pluginOptions' => [
-        'format' => 'yyyy-mm-dd',
-        'todayHighlight' => true
-    ]])";
+            return "\$form->field(\$model, '$attribute')->widget(\\kartik\\date\\DatePicker::className(),
+            ['pluginOptions' => [
+            'format' => 'yyyy-mm-dd',
+            'todayHighlight' => true
+            ]
+        ])";
         } else {
             if (preg_match('/^(password|pass|passwd|passcode)$/i', $column->name)) {
                 $input = 'passwordInput';
@@ -263,7 +270,12 @@ class Generator extends \yii\gii\Generator
                     return "\$form->field(\$model, '$attribute')->dropDownList(\$model->options['".$column->name."'], ['prompt' => '请选择'])";
                 }
             }elseif($column->phpType !== 'string' || $column->size === null || $input == 'fileInput') {
-                return "\$form->field(\$model, '$attribute')->$input()";
+                return "\$form->field(\$model, '".trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$attribute),'_- ')."')->widget(
+        trntv\\filekit\\widget\\Upload::className(),
+        [
+            'url' => ['/file-storage/upload'],
+            'maxFileSize' => 2000000, // 2 MiB
+        ]);";
             } else {
                 return "\$form->field(\$model, '$attribute')->$input(['maxlength' => $column->size])";
             }

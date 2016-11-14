@@ -28,11 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= "<?= " ?>Html::a(<?= $generator->generateString('添加 {modelClass}', ['modelClass' => Inflector::camel2words(StringHelper::basename($generator->modelClass))]) ?>, ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+<div style="overflow: scroll;height: 500px;">
 <?php if(!empty($generator->searchModelClass)): ?>
 <?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
     <?= '<?php echo $this->render("_toolbar", ["model" => $dataProvider]); ?>'?>
+
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
@@ -42,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
             ['class' => 'yii\grid\SerialColumn'],
-            ['class' => 'yii\grid\CheckboxColumn', 'options' => ['id' => 'grid']],
+            ['class' => 'yii\grid\CheckboxColumn', 'options' => ['id' => 'grid','style'=>'overflow-x: scroll']],
 <?php
 $count = 0;
 if (($tableSchema = $generator->getTableSchema()) === false) {
@@ -71,7 +72,9 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 ?>[
                 'attribute' => '<?= $column->name ?>',
                 'format' => 'html',
-                'value' => '<?= $column->name ?>',
+                'value' => function ($model) {
+                            return Yii::$app->formatter->asDatetime($model-><?= $column->name?>) ;
+                            },
                 'filter' => kartik\date\DatePicker::widget(
                     ['model' => $searchModel,
                        'name' => Html::getInputName($searchModel, '<?= $column->name ?>'),
@@ -104,7 +107,14 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 'attribute' => '<?= $column->name ?>',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return Html::img(Yii::$app->homeUrl . $model-><?= $column->name ?>, ['class' => 'img-rounded', 'width' => '120px']);
+                    return Html::img(
+                                Yii::$app->glide->createSignedUrl([
+                                'glide/index',
+                                'path' => $model-><?= $column->name ?>,
+                                'w' => 100
+                                ], true),
+                                ['class' => 'article-thumb img-rounded pull-left']
+                            );
                 },
                 'filter' => false
             ],
@@ -150,4 +160,5 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     <?php if($jsfuncton){
         echo '   $this->registerJsFile("/js/'.$generator->controllerID.'.js");';
     }  ?>?>
+    </div>
 </div>

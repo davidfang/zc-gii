@@ -192,7 +192,12 @@ class Generator extends \yii\gii\Generator
         $labels = [];
         foreach ($table->columns as $column) {
             if ($this->generateLabelsFromComments && !empty($column->comment)) {
-                $labels[$column->name] = $column->comment;
+                if(preg_match('/^(img|image|file)/i', $column->name)){
+                    $columnName = trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ');
+                    $labels[$columnName] = $column->comment;
+                }else{
+                    $labels[$column->name] = $column->comment;
+                }
             } elseif (!strcasecmp($column->name, 'id')) {
                 $labels[$column->name] = 'ID';
             } else {
@@ -200,7 +205,13 @@ class Generator extends \yii\gii\Generator
                 if (!empty($label) && substr_compare($label, ' id', -3, 3, true) === 0) {
                     $label = substr($label, 0, -3) . ' ID';
                 }
-                $labels[$column->name] = $label;
+                if(preg_match('/^(img|image|file)/i', $column->name)){
+                    $columnName = trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ');
+                    $labels[$columnName] = $label;
+                }else{
+                    $labels[$column->name] = $label;
+                }
+
             }
         }
 
@@ -249,6 +260,9 @@ class Generator extends \yii\gii\Generator
                     } else {
                         $types['string'][] = $column->name;
                     }
+            }
+            if (preg_match('/^(img|image|file)/i', $column->name)) {
+                $types['safe'][] = trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ');
             }
         }
         $rules = [];

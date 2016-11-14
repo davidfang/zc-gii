@@ -92,6 +92,10 @@ $config['bootstrap'][] = 'gii';
 * 日期以date形式或者以date、datetime结束，会自动生成日历选择框
 * created_at和updated 创建和修改时间form表单默认不会显示，如要显示自行去掉注释
 
+
+####V2.0 for starer kit
+* 上传图片时需要建立图片字段，同时建立base_url字段，供上传使用
+* 将model中的上传字段限制修改
 Power By David Fang
 
 

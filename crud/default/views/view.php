@@ -40,13 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
     if (($tableSchema = $generator->getTableSchema()) === false) {
         foreach ($generator->getColumnNames() as $name) {
-            echo "            '" . $name . "',\n";
+            echo "       '" . $name . "',\n";
         }
     } else {
         foreach ($generator->getTableSchema()->columns as $column) {
             $format = $generator->generateColumnFormat($column);
             if (is_array($column->enumValues) && !empty($column->enumValues)) { ?>
-    [
+        [
         'attribute'=>'<?= $column->name ?>',
         'value'=>$model->options['<?= $column->name ?>'][$model-><?= $column->name ?>]
         ],
@@ -54,12 +54,19 @@ $this->params['breadcrumbs'][] = $this->title;
         [
         'attribute'=>'<?= $column->name ?>',
         'format' =>'html',
-        'value'=>Html::img(Yii::$app->homeUrl .$model-><?= $column->name ?>,['width'=>'120px'])
+        'value'=>Html::img(
+                Yii::$app->glide->createSignedUrl([
+                'glide/index',
+                'path' => $model-><?= $column->name ?>,
+                //'w' => 100
+                ], true),
+                ['class' => 'article-thumb img-rounded pull-left']
+                )
         ],
             <?php } elseif (in_array($column->name,['created_at','updated_at'])) { ?>
-                <?php  echo "            '" .$column->name .":datetime'," ?>
+                <?php  echo "       '" .$column->name .":datetime',\n" ?>
              <?php } else {
-                        echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+                        echo "       '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
                     }
         }
     }

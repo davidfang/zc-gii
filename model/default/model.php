@@ -36,6 +36,19 @@ use yii\behaviors\TimestampBehavior;
  */
 class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
 {
+    <?php
+    foreach ($tableSchema->columns as $column) {
+        if (preg_match('/^(img|image|file)/i', $column->name)) {?>
+
+   /**
+    * @var array
+    */
+
+    public $<?= trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ') ?>;
+        <?php    }
+    }
+    ?>
+
     /**
      * @inheritdoc
      */
@@ -74,6 +87,18 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
                         ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],//可以根据需要去掉updated_at
                     ],
                 ],
+                <?php
+                foreach ($tableSchema->columns as $column) {
+                    if (preg_match('/^(img|image|file)/i', $column->name)) {?>
+                [
+                'class' => \trntv\filekit\behaviors\UploadBehavior::className(),
+                'attribute' => '<?= trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ') ?>',
+                'pathAttribute' => '<?= $column->name ?>',
+                'baseUrlAttribute' => 'base_url' //默认的基本URL
+                ],
+                <?php    }
+                }
+                ?>
         ];
     }
     /**

@@ -122,28 +122,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = new <?= $modelClass ?>();
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->validate()) {
-                <?php
-
-                foreach ($columnNames as $column) {
-                    if(preg_match('/^(img|image|file)/i', $column)){ ?>
-                $uploadFile = UploadedFile::getInstance($model,'<?=$column?>');
-                $newurl = "uploads/" . date('YmdHis-').rand(100,999). '.' .
-                $uploadFile->extension;
-                $uploadFile->saveAs($newurl);
-                $model-><?=$column?> = $newurl;
-                <?php
-                    }
-                }
-                ?>
-                $model->save();
-                return $this->redirect(['view', <?= $urlParams ?>]);
-            }else{
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
