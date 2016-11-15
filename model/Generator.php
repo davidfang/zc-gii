@@ -193,6 +193,7 @@ class Generator extends \yii\gii\Generator
         foreach ($table->columns as $column) {
             if ($this->generateLabelsFromComments && !empty($column->comment)) {
                 if(preg_match('/^(img|image|file)/i', $column->name)){
+                    $labels[$column->name] = $column->comment;
                     $columnName = trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ');
                     $labels[$columnName] = $column->comment;
                 }else{
@@ -206,6 +207,7 @@ class Generator extends \yii\gii\Generator
                     $label = substr($label, 0, -3) . ' ID';
                 }
                 if(preg_match('/^(img|image|file)/i', $column->name)){
+                    $labels[$column->name] = $label;
                     $columnName = trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ');
                     $labels[$columnName] = $label;
                 }else{

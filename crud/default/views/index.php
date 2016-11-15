@@ -104,7 +104,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             <?php
             } elseif (preg_match('/^(img|image)/i', $column->name)) { ?>
             [
-                'attribute' => '<?= $column->name ?>',
+                'attribute' => '<?= trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$column->name),'_- ') ?>',
                 'format' => 'html',
                 'value' => function ($model) {
                     return Html::img(
