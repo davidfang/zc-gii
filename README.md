@@ -78,6 +78,9 @@ $config['bootstrap'][] = 'gii';
 释加在方法返回值中，同时在/js/文件夹下填写与控制器
 同名的js文件，并写上对应的js操作方法；
 6. 要上传图片，自己在web下建立upload文件夹；
+7. 修改_toolbar.php中地址的路径
+```var url = '<?= Yii::$app->urlManager->createUrl('wechat/change-status-ajax') ?>';
+```
 
 ####注意事项
 
