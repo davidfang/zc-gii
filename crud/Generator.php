@@ -269,7 +269,8 @@ class Generator extends \yii\gii\Generator
                 }else {
                     return "\$form->field(\$model, '$attribute')->dropDownList(\$model->options['".$column->name."'], ['prompt' => '请选择'])";
                 }
-            }elseif($column->phpType !== 'string' || $column->size === null || $input == 'fileInput') {
+            //}elseif($column->phpType !== 'string' && $column->size === null && $input == 'fileInput') {
+            }elseif( $input == 'fileInput') {
                 return "\$form->field(\$model, '".trim(preg_replace('/^(img|image|file)(\w?)/i','$2',$attribute),'_- ')."')->widget(
         trntv\\filekit\\widget\\Upload::className(),
         [

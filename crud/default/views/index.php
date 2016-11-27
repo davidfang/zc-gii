@@ -140,7 +140,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                     $jsfuncton = true;
                 } ?>
                     '<?=$button?>' => function ($url, $model, $key) {
-                        return $model-><?=$toolbar['field']?> == <?=$toolbar['field_value']?> ? '' : Html::button('<?=$toolbar['name']?>', ['class' => 'btn btn-primary btn-sm', 'onclick' => "javascript:<?=$toolbar['jsfunction']?>('<?=$toolbar['field'] ?>','<?=$toolbar['field_value'] ?>','{$model-><?=implode(',',$model->getTableSchema()->primaryKey);?>}');"]);
+                        return $model-><?=$toolbar['field']?> == '<?=$toolbar['field_value']?>' ? '' : Html::button('<?=$toolbar['name']?>', ['class' => 'btn btn-primary btn-sm', 'onclick' => "javascript:<?=$toolbar['jsfunction']?>('<?=$toolbar['field'] ?>','<?=$toolbar['field_value'] ?>','{$model-><?=implode(',',$model->getTableSchema()->primaryKey);?>}');"]);
                     },
 <?php } ?>
                ],
